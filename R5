@@ -1,0 +1,121 @@
+vyos@vyos:~$ show configuration
+interfaces {
+    ethernet eth2 {
+        address 192.168.50.1/29
+        description R5-->R1
+        hw-id 0c:9e:c7:63:00:02
+        vif 1003 {
+            address 10.0.2.2/29
+        }
+    }
+    ethernet eth3 {
+        hw-id 0c:9e:c7:63:00:03
+    }
+    ethernet eth4 {
+        hw-id 0c:9e:c7:63:00:04
+    }
+    ethernet eth5 {
+        address 192.168.60.1/29
+        description R5-->R2
+        hw-id 0c:9e:c7:63:00:05
+        vif 2003 {
+            address 10.0.5.2/29
+        }
+    }
+    ethernet eth6 {
+        address 192.168.100.1/30
+        description R5-->Firewall
+        hw-id 0c:9e:c7:63:00:06
+    }
+    ethernet eth7 {
+        hw-id 0c:9e:c7:63:00:07
+    }
+    loopback lo {
+        address 5.5.5.5/32
+    }
+}
+policy {
+}
+protocols {
+    bgp {
+        address-family {
+            l2vpn-evpn {
+                advertise {
+                    ipv4 {
+                        unicast {
+                        }
+                    }
+                }
+            }
+        }
+        neighbor 192.168.50.2 {
+            address-family {
+                l2vpn-evpn {
+                }
+            }
+            remote-as 65001
+        }
+        neighbor 192.168.60.2 {
+            address-family {
+                l2vpn-evpn {
+                }
+            }
+            remote-as 65002
+        }
+        system-as 65005
+    }
+}
+service {
+    ntp {
+        allow-client {
+            address 0.0.0.0/0
+            address ::/0
+        }
+        server time1.vyos.net {
+        }
+        server time2.vyos.net {
+        }
+        server time3.vyos.net {
+        }
+    }
+}
+system {
+    config-management {
+        commit-revisions 100
+    }
+    conntrack {
+        modules {
+            ftp
+            h323
+            nfs
+            pptp
+            sip
+            sqlnet
+            tftp
+        }
+    }
+    console {
+        device ttyS0 {
+            speed 115200
+        }
+    }
+    host-name vyos
+    login {
+        user vyos {
+            authentication {
+                encrypted-password ****************
+                plaintext-password ****************
+            }
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level info
+            }
+            facility local7 {
+                level debug
+            }
+        }
+    }
+}
