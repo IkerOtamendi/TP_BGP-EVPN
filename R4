@@ -1,0 +1,119 @@
+vyos@vyos:~$ show configuration
+interfaces {
+    ethernet eth0 {
+        hw-id 0c:76:ff:e3:00:00
+    }
+    ethernet eth1 {
+        address 192.168.30.1/29
+        description R4-->R1
+        hw-id 0c:76:ff:e3:00:01
+        vif 1002 {
+            address 10.0.1.2/29
+        }
+    }
+    ethernet eth2 {
+        hw-id 0c:76:ff:e3:00:02
+    }
+    ethernet eth3 {
+        hw-id 0c:76:ff:e3:00:03
+    }
+    ethernet eth4 {
+        address 192.168.40.1/29
+        description R4-->R2
+        hw-id 0c:76:ff:e3:00:04
+        vif 2002 {
+            address 10.0.4.2/29
+        }
+    }
+    ethernet eth5 {
+        address 10.10.30.1/29
+        description R4-->PC3
+        hw-id 0c:76:ff:e3:00:05
+        vif 4001 {
+            address 10.0.8.1/29
+        }
+    }
+    ethernet eth6 {
+        address 10.10.40.1/29
+        description R4-->PC4
+        hw-id 0c:76:ff:e3:00:06
+        vif 4002 {
+            address 10.0.9.1/29
+        }
+    }
+    ethernet eth7 {
+        hw-id 0c:76:ff:e3:00:07
+    }
+    loopback lo {
+        address 4.4.4.4/32
+    }
+}
+protocols {
+    bgp {
+        address-family {
+            l2vpn-evpn {
+            }
+        }
+        neighbor 192.168.30.2 {
+            remote-as 65001
+        }
+        neighbor 192.168.40.2 {
+            remote-as 65002
+        }
+        system-as 65004
+    }
+}
+service {
+    ntp {
+        allow-client {
+            address 0.0.0.0/0
+            address ::/0
+        }
+        server time1.vyos.net {
+        }
+        server time2.vyos.net {
+        }
+        server time3.vyos.net {
+        }
+    }
+}
+system {
+    config-management {
+        commit-revisions 100
+    }
+    conntrack {
+        modules {
+            ftp
+            h323
+            nfs
+            pptp
+            sip
+            sqlnet
+            tftp
+        }
+    }
+    console {
+        device ttyS0 {
+            speed 115200
+        }
+    }
+    host-name vyos
+    login {
+        user vyos {
+            authentication {
+                encrypted-password ****************
+                plaintext-password ****************
+            }
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level info
+            }
+            facility local7 {
+                level debug
+            }
+        }
+    }
+}
