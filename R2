@@ -1,0 +1,111 @@
+vyos@vyos:~$ show configuration
+interfaces {
+    ethernet eth0 {
+        hw-id 0c:04:6f:39:00:00
+    }
+    ethernet eth1 {
+        hw-id 0c:04:6f:39:00:01
+    }
+    ethernet eth2 {
+        hw-id 0c:04:6f:39:00:02
+    }
+    ethernet eth3 {
+        address 192.168.20.2/30
+        vif 2001 {
+            address 10.0.3.1/29
+        }
+    }
+    ethernet eth4 {
+        address 192.168.40.2/30
+        description R2-->R4
+        vif 2002 {
+            address 10.0.4.1/29
+        }
+    }
+    ethernet eth5 {
+        address 192.168.60.2/30
+        description R2-->R5
+        hw-id 0c:04:6f:39:00:05
+        vif 2003 {
+            address 10.0.5.1/29
+        }
+    }
+    ethernet eth6 {
+        hw-id 0c:04:6f:39:00:06
+    }
+    loopback lo {
+        address 2.2.2.2/32
+    }
+}
+protocols {
+    bgp {
+        address-family {
+            ipv4-unicast {
+            }
+        }
+        neighbor 192.168.20.1 {
+            remote-as 65003
+        }
+        neighbor 192.168.40.1 {
+            remote-as 65004
+        }
+        neighbor 192.168.60.1 {
+            remote-as 65005
+        }
+        system-as 65002
+    }
+}
+service {
+    ntp {
+        allow-client {
+            address 0.0.0.0/0
+            address ::/0
+        }
+        server time1.vyos.net {
+        }
+        server time2.vyos.net {
+        }
+        server time3.vyos.net {
+        }
+    }
+}
+system {
+    config-management {
+        commit-revisions 100
+    }
+    conntrack {
+        modules {
+            ftp
+            h323
+            nfs
+            pptp
+            sip
+            sqlnet
+            tftp
+        }
+    }
+    console {
+        device ttyS0 {
+            speed 115200
+        }
+    }
+    host-name vyos
+    login {
+        user vyos {
+            authentication {
+                encrypted-password ****************
+                plaintext-password ****************
+            }
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level info
+            }
+            facility local7 {
+                level debug
+            }
+        }
+    }
+}
